@@ -1,3 +1,4 @@
+#!/bin/sh
 # REBOOT - v.0.0.1
 
 # Make sure user consents
