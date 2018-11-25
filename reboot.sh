@@ -36,6 +36,20 @@ else
     exit
 fi
 
+# Move dotfiles
+echo "\n${Blue}• Moving dotfiles${Color_End}"
+declare -a arr=(
+    "bash_profile"
+    "gitconfig"
+    "gitignore"
+    "hyper.js"
+    "zshrc"
+)
+for i in "${arr[@]}"
+do
+    ln -s "$PWD/dotfiles/.$i" "/Users/natedunn"
+done
+
 #(Oh My) ZSH
 echo "\n${Blue}• Oh My Zsh${Color_End}"
 if [[ $SHELL != /bin/zsh ]] ; then
