@@ -142,12 +142,19 @@ declare -a arr=(
     "ticktick"
     "bartender"
     "sequel-pro"
+    "franz"
+    "toggl"
+    "karabiner"
+    "karabiner-elements"
+    "now"
+    "kap"
+    "switchhosts"
 )
 for i in "${arr[@]}"
 do
     if brew cask ls --versions $i &> /dev/null; then
-        echo "Reinstalling $i."
-        brew cask reinstall $i
+        echo "$i is already installed."
+        # brew cask reinstall $i
     else
         echo "Installing $i."
         brew cask install $i
