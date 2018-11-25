@@ -1,5 +1,3 @@
-# PLace file in root and rename to ".gitignore".
-
 .DS_Store
 *.sw[nop]
 .bundle
