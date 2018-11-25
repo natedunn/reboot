@@ -70,21 +70,29 @@ if [[ $? != 0 ]] ; then
 else
     echo "Homebrew is already installed. Updating."
     brew update
-    # brew doctor
+    brew doctor
 fi
 
-echo "\n• Homebrew Packages"
+echo "\n${Blue}• Installing Homebrew packages${Color_End}"
 declare -a arr=(
-    "php"
+    "git"
     "mas"
+    "php"
     "php@5.6"
     "php@7.0"
-    "php@7.1"
+    "tree"
+    "httpd"
+    "yarn"
+    "nginx"
+    "mariadb"
+    "composer"
+    "youtube-dl"
 )
 for i in "${arr[@]}"
 do
     if brew ls --versions $i &> /dev/null; then
         echo "$i is installed"
+        brew reinstall $i
         brew ls --versions $i
     else
         echo "$i has not been installed. Installing now."
@@ -92,89 +100,116 @@ do
     fi
 done
 
-echo "\n• Homebrew Cask"
+echo "\n${Blue}• Installing Homebrew Cask apps${Color_End}"
 declare -a arr=(
     "1password"
-    # "nordvpn"
-    # "authy"
-    # "fantastical"
-    # "cleanmymac"
-    # "rescuetime"
-    # "slack"
-    # "spotify"
-    # "vlc"
-    # "sizeup"
-    # "hyperswitch"
-    # "the-clock"
-    # "sip"
-    # "figma"
-    # "sketch"
-    # "firefox"
-    # "google-chrome"
-    # "visual-studio-code"
-    # "hyperterm"
-    # "tower"
-    # "transmit"
-    # "virtualbox"
-    # "sim-daltonism"
+    "nordvpn"
+    "authy"
+    "fantastical"
+    "cleanmymac"
+    "rescuetime"
+    "slack"
+    "spotify"
+    "vlc"
+    "sizeup"
+    "hyperswitch"
+    "the-clock"
+    "sip"
+    "figma"
+    "sketch"
+    "firefox"
+    "google-chrome"
+    "visual-studio-code"
+    "hyperterm"
+    "tower"
+    "transmit"
+    "virtualbox"
+    "sim-daltonism"
+    "ticktick"
+    "bartender"
+    "sequel-pro"
 )
 for i in "${arr[@]}"
 do
     if brew cask ls --versions $i &> /dev/null; then
-        echo "$i is installed"
+        echo "Reinstalling $i."
+        brew cask reinstall $i
     else
-        echo "$i has not been installed. Installing now."
+        echo "Installing $i."
         brew cask install $i
     fi
 done
 
+echo "\n${Blue}• Installing apps from Mac App Store${Color_End}"
+declare -a arr=(
+    "1384080005" # Tweetbot
+    "1176895641" # Spark
+    "931657367" # Calcbot
+    "668208984" # GIPHY CAPTURE
+    "1191449274" # ToothFairy
+    "715768417" # Microsoft Remote Desktop
+    "497799835" # Xcode
+)
+for i in "${arr[@]}"
+do
+    mas install $i
+done
+
 # Node
-echo "\n${Blue}• Node.js${Color_End}"
+echo "\n${Blue}• Checking Node.js${Color_End}"
 which -s node
 if [[ $? != 0 ]] ; then
     echo "Installing lastest version of Node.js."
-    brew install node
+    brew update
+    brew install nvm
+    source $(brew --prefix nvm)/nvm.sh
+    nvm install node
+    npm install -g npm@latest
 else
     echo "Node.js is already installed."
     node -v
 fi
 
 # NPM
-echo "\n${Blue}• NPM${Color_End}"
-which -s npm
-if [[ $? != 0 ]] ; then
-    echo "Downloading lastest version of NPM."
-    cd ~/Downloads
-    git clone git://github.com/isaacs/npm.git && cd npm
-    git checkout v${NPM_VERSION}
-    echo "Installing NPM"
-    make install
-    cd ~
-else
-    echo "NPM is already installed. Updating."
-    npm -v
-    # npm install -g npm@latest
-fi
+# echo "\n${Blue}• NPM${Color_End}"
+# which -s npm
+# if [[ $? != 0 ]] ; then
+#     echo "Downloading lastest version of NPM."
+#     cd ~/Downloads
+#     git clone git://github.com/isaacs/npm.git && cd npm
+#     git checkout v${NPM_VERSION}
+#     echo "Installing NPM"
+#     make install
+#     cd ~
+# else
+#     echo "NPM is already installed. Updating."
+#     npm -v
+#     # npm install -g npm@latest
+# fi
+
+echo "\n${Blue}• Installing sphp (PHP switcher)${Color_End}"
+curl -L https://gist.githubusercontent.com/rhukster/f4c04f1bf59e0b74e335ee5d186a98e2/raw > /usr/local/bin/sphp
+chmod +x /usr/local/bin/sphp
 
 # Xcode & Git
-echo "\n${Blue}• Git${Color_End}"
-if type xcode-select >&- && xpath=$( xcode-select --print-path ) &&
-    test -d "${xpath}" && test -x "${xpath}" ; then
-    echo "Git is already installed."
-else
-    echo "Git is not installed. Installing."
-    xcode-select --install
-fi
-git --version
+# echo "\n${Blue}• Git${Color_End}"
+# if type xcode-select >&- && xpath=$( xcode-select --print-path ) &&
+#     test -d "${xpath}" && test -x "${xpath}" ; then
+#     echo "Git is already installed."
+# else
+#     echo "Git is not installed. Installing."
+#     xcode-select --install
+# fi
+# git --version
 
-echo "\n${Blue}• Composer${Color_End}"
-if [[ $COMPOSER_IS_INSTALLED -ne 0 ]]; then
-    echo "Composer is not installed. Installing."
-    brew install composer
-else
-    echo "Composer is already installed."
-fi
-composer --version
+# echo "\n${Blue}• Composer${Color_End}"
+# if [[ $COMPOSER_IS_INSTALLED -ne 0 ]]; then
+#     echo "Composer is not installed. Installing."
+#     brew install composer
+# else
+#     echo "Composer is already installed."
+# fi
+# composer --version
 
 echo "\n${Blue}• Valet${Color_End}"
 if [[ $VALET_IS_INSTALLED -ne 0 ]]; then
@@ -186,9 +221,9 @@ fi
 valet --version
 
 # Download dotfiles
-echo "\n${Blue}• Downloading Custom dotfiles to ~/Downloads.${Color_End}"
-cd ~/Downloads
-git clone git@github.com:natedunn/dotfiles.git
+# echo "\n${Blue}• Downloading Custom dotfiles to ~/Downloads.${Color_End}"
+# cd ~/Downloads
+# git clone git@github.com:natedunn/dotfiles.git
 
 echo "\n${Blue}• Reboot Complete! ${Color_End}"
 exit
