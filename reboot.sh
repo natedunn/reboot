@@ -1,11 +1,10 @@
 #!/bin/sh
 
-############
+###########################
 # Reboot
 # Author: Nate Dunn
 # URL: https://github.com/natedunn/reboot
-# Instructions: Place in /Users/yourusername and run with 'sh reboot.sh'.
-############
+###########################
 
 
 # Colors
@@ -45,6 +44,21 @@ if [[ $SHELL != /bin/zsh ]] ; then
 else
     echo "Oh My Zsh is installed and your current shell."
 fi
+
+# (Oh My) ZSH Plugins
+echo "\n${Blue}• Oh My Zsh Plugins${Color_End}"
+echo "• Installing Z"
+cd ~
+mkdir .zee
+cd .zee
+curl -O -J https://raw.githubusercontent.com/rupa/z/master/z.sh
+cd ~
+
+echo "• Installing zsh-autosuggestions"
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+echo "• Installing zsh-syntax-highlighting"
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 # Homebrew
 echo "\n${Blue}• Homebrew${Color_End}"
