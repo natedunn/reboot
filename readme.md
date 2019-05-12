@@ -1,3 +1,2 @@
-# Reboot
-
-A personal collection of dotfiles and a fancy bash script to setup/update a new computer.
+# ❗️ Notice:
+This repository has been deprecated in favor of [Proper](https://github.com/natedunn/proper).
